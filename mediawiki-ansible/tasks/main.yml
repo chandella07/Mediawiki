@@ -1,0 +1,9 @@
+# main playbook to include other playbooks
+
+- include_tasks: install_packages.yml
+- include_tasks: mariadb.yml
+- include_tasks: mediawiki.yml
+- include_tasks: firewall.yml
+- include_tasks: selinux.yml
+- include_tasks: generate_ssl_cert.yml
+- include_tasks: restart.yml

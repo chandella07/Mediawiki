@@ -1,0 +1,51 @@
+---
+- name: Downloading MediaWiki tar.gz
+  get_url:
+    url: https://releases.wikimedia.org/mediawiki/1.39/mediawiki-1.39.2.tar.gz
+    dest: /home/{{ remote_username }}/
+
+- name: Downloading MediaWiki signature
+  get_url:
+    url: https://releases.wikimedia.org/mediawiki/1.39/mediawiki-1.39.2.tar.gz.sig
+    dest: /home/{{ remote_username }}/
+
+- name: Unarchive the downloaded tar.gz file to user home directory
+  unarchive:
+    src: /home/{{ remote_username }}/mediawiki-1.39.2.tar.gz
+    dest: /home/{{ remote_username }}/
+    remote_src: yes
+
+- name: Unarchive the downloaded tar.gz file to /var/www
+  unarchive:
+    src: /home/{{ remote_username }}/mediawiki-1.39.2.tar.gz
+    dest: /var/www/
+    remote_src: yes
+    owner: apache
+    group: apache  
+
+- name: Create sym link
+  file:
+    src: "/var/www/mediawiki-1.39.2"
+    dest: "/var/www/mediawiki"
+    state: link
+
+- name: replacing line 'DocumentRoot "var/www/html"'
+  lineinfile: 
+    path: /etc/httpd/conf/httpd.conf 
+    regexp: '^DocumentRoot "/var/www/html"'  
+    line: 'DocumentRoot "/var/www/mediawiki"'
+    backrefs: yes
+
+- name: replacing line 'Directory "/var/www/html"'
+  lineinfile: 
+    path: /etc/httpd/conf/httpd.conf 
+    regexp: '^<Directory "/var/www/html">'  
+    line: '<Directory "/var/www/mediawiki">'
+    backrefs: yes
+
+- name: replacing line DirectoryIndex with add content
+  lineinfile: 
+    path: /etc/httpd/conf/httpd.conf 
+    regexp: '^DirectoryIndex index.html$' 
+    line: 'DirectoryIndex index.html index.html.var index.php'
+    backrefs: yes

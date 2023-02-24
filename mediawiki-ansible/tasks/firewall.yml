@@ -1,0 +1,21 @@
+---
+- name: firewall http rule
+  firewalld:
+    service: http
+    zone: public
+    permanent: yes
+    immediate: yes
+    state: enabled
+
+- name: firewall https rule
+  firewalld:
+    service: https
+    zone: public
+    permanent: yes
+    immediate: yes
+    state: enabled	  
+
+- name: restarting firewalld service
+  service:
+    name: firewalld
+    state: restarted

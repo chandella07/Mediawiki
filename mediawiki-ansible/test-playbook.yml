@@ -1,0 +1,9 @@
+---
+- name: main playbook
+  hosts: all
+  remote_user: "{{ lookup('env', 'TF_VAR_admin_user') }}"
+  become: yes
+  gather_facts: no
+
+  roles:
+    - role: mediawiki-ansible

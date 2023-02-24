@@ -1,0 +1,10 @@
+---
+- name: Disable SELinux
+  ansible.posix.selinux:
+    state: disabled
+
+- name: Setting correct context for mediawiki files
+  command: restorecon -FR /var/www/mediawiki-1.39.2/
+
+- name: Setting correct context for mediawiki files
+  command: restorecon -FR /var/www/mediawiki

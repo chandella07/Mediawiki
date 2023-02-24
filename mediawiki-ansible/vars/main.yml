@@ -1,0 +1,10 @@
+---
+# vars for mediawiki config
+remote_username: "{{ lookup('env', 'TF_VAR_admin_user') }}"
+mysql_root_passwd: "{{ lookup('env', 'mysql_root_pwrd') }}"
+mysql_user_passwd: "{{ lookup('env', 'mysql_user_pwrd') }}"
+
+# SSL certificate vars
+common_name: localhost.com
+cert_file: /etc/pki/tls/certs/localhost.crt
+key_file: /etc/pki/tls/private/localhost.key

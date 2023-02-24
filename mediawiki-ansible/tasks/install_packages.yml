@@ -1,0 +1,45 @@
+---
+# added below steps microsoft documentation for Switch a RHEL 8.x VM back to non-EUS (remove a version lock)
+- name: disable repo
+  command: "yum --disablerepo='*' remove 'rhui-azure-rhel8-eus'"
+
+- name: get new repo
+  command: "wget https://rhelimage.blob.core.windows.net/repositories/rhui-microsoft-azure-rhel8.config"
+
+- name: yum config
+  command: "yum --config=rhui-microsoft-azure-rhel8.config install rhui-azure-rhel8"
+
+- name: yum update
+  command: "sudo yum update"
+
+
+# Installing req. packages
+- name: Install required packages in a loop.
+  dnf:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - httpd
+    - php
+    - php-mysqlnd
+    - php-gd
+    - php-xml
+    - mariadb-server
+    - mariadb
+    - php-mbstring
+    - php-json
+    - mod_ssl
+    - php-intl
+    - php-apcu
+    - expect
+
+- name: Install python mysql package
+  pip:
+    name: pymysql
+    state: present
+
+# setting php version 7.4 for RHEL 8
+- name: install the php:7.4
+  dnf:
+    name: '@php:7.4'
+    state: present
