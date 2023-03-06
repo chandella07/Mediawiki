@@ -25,15 +25,15 @@ cd mediawiki-terraform
 # Executing terraform for creating infrastructure
 terraform init
 terraform plan -out plan.out
-terraform apply plan.out -auto-approve
+terraform apply -auto-approve plan.out
 
 
 # Setting VM_IP to env
-export VM_IP=$(terraform output azurerm_linux_virtual_machine.tf_vm1.public_ip_address)
+export VM_IP=$(terraform output vm_public_ip)
 
 # moving to ansible dir
-cd ../mediawiki-ansible/
+cd ../
 
 # executing ansible role
-ansible-playbook -i $VM_IP, test-playbook.yml -e "ansible_user=$TF_VAR_admin_user" -e "ansible_password=$TF_VAR_admin_passwd" -e "ansible_sudo_pass=$TF_VAR_admin_passwd"
+ansible-playbook -i $VM_IP, mediawiki-ansible/test-playbook.yml -e "ansible_user=$TF_VAR_admin_user" -e "ansible_password=$TF_VAR_admin_passwd" -e "ansible_sudo_pass=$TF_VAR_admin_passwd"
 
